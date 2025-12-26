@@ -1,4 +1,0 @@
-export const APP = {
-  trackingRegex: /^DLH-\d{4}-\d{6}$/,
-  adminEmail: "dhlnow@usa.com"
-};
