@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DHL Logistics | Admin</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- [web:198] -->
+</head>
+
+<body class="h-full bg-slate-950 text-slate-100">
+  <header class="border-b border-white/10 bg-slate-950/60 backdrop-blur">
+    <div class="mx-auto max-w-6xl px-4 py-5 flex items-center justify-between">
+      <div>
+        <div class="text-lg font-semibold">Admin Console</div>
+        <div class="text-xs text-slate-400">Create shipments, update statuses, send SMS</div>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="./index.html" class="text-sm text-slate-300 hover:text-white underline decoration-white/20">Tracking</a>
+        <button id="btnLogout" disabled class="rounded-xl border border-white/10 bg-white/5 px-4 py-2 hover:bg-white/10">
+          Sign out
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-4 py-10">
+    <div class="grid gap-6 lg:grid-cols-3">
+      <!-- Login -->
+      <section class="lg:col-span-1">
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <h2 class="text-lg font-semibold">Login</h2>
+          <p class="mt-1 text-sm text-slate-300">Only you can access this dashboard.</p>
+
+          <div class="mt-4 space-y-3">
+            <div>
+              <label class="text-xs text-slate-400">Email</label>
+              <input id="email" class="mt-1 w-full rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 outline-none focus:border-indigo-400/60" placeholder="you@example.com">
+            </div>
+            <div>
+              <label class="text-xs text-slate-400">Password</label>
+              <input id="password" type="password" class="mt-1 w-full rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 outline-none focus:border-indigo-400/60" placeholder="••••••••">
+            </div>
+
+            <button id="btnLogin" class="w-full rounded-xl bg-indigo-500 px-4 py-3 font-semibold text-white hover:bg-indigo-400">
+              Sign in
+            </button>
+
+            <div id="adminMsg" class="hidden rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200"></div>
+          </div>
+
+          <div class="mt-4 rounded-xl border border-white/10 bg-slate-950/30 p-4 text-sm text-slate-300">
+            Tip: keep your Firebase Auth user private and use a strong password. [web:121]
+          </div>
+        </div>
+      </section>
+
+      <!-- Actions -->
+      <section class="lg:col-span-2">
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <h2 class="text-lg font-semibold">Operations</h2>
+              <p class="text-sm text-slate-300">All actions send SMS from <span class="font-semibold">DHLLogistic</span> (after approval).</p>
+            </div>
+            <span id="authBadge" class="hidden rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200"></span>
+          </div>
+
+          <div id="locked" class="mt-5 rounded-xl border border-dashed border-white/15 bg-slate-950/20 p-8 text-center text-slate-300">
+            Sign in to unlock shipment management.
+          </div>
+
+          <div id="ops" class="hidden mt-5 space-y-6">
+            <!-- Create shipment -->
+            <div class="rounded-2xl border border-white/10 bg-slate-950/20 p-5">
+              <div class="flex items-center justify-between gap-2">
+                <div class="font-semibold">Create shipment</div>
+                <div class="text-xs text-slate-400">Generates a 6-digit PIN and sends first SMS</div>
+              </div>
+
+              <div class="mt-4 grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label class="text-xs text-slate-400">Tracking number</label>
+                  <input id="newTracking" placeholder="DLH-2025-000123"
+                    class="mt-1 w-full rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 outline-none focus:border-indigo-400/60" />
+                  <p class="mt-1 text-xs text-slate-400">Format: DLH-YYYY-000000</p>
+                </div>
+                <div>
+                  <label class="text-xs text-slate-400">Customer phone (E.164)</label>
+                  <input id="newPhone" placeholder="+2547XXXXXXXX"
+                    class="mt-1 w-full rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 outline-none focus:border-indigo-400/60" />
+                </div>
+              </div>
+
+              <div class="mt-4 flex gap-3">
+                <button id="btnCreate" class="rounded-xl bg-indigo-500 px-4 py-3 font-semibold text-white hover:bg-indigo-400">
+                  Create shipment
+                </button>
+                <button id="btnResetCreate" type="button"
+                  class="rounded-xl border border-white/10 bg-white/5 px-4 py-3 hover:bg-white/10">
+                  Reset
+                </button>
+              </div>
+
+              <div id="pinBox" class="hidden mt-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-100"></div>
+            </div>
+
+            <!-- Add event -->
+            <div class="rounded-2xl border border-white/10 bg-slate-950/20 p-5">
+              <div class="flex items-center justify-between gap-2">
+                <div class="font-semibold">Add tracking event</div>
+                <div class="text-xs text-slate-400">Adds to history + sends SMS update</div>
+              </div>
+
+              <div class="mt-4 grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label class="text-xs text-slate-400">Tracking number</label>
+                  <input id="evTracking" placeholder="DLH-2025-000123"
+                    class="mt-1 w-full rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 outline-none focus:border-indigo-400/60" />
+                </div>
+                <div>
+                  <label class="text-xs text-slate-400">Status</label>
+                  <select id="evStatus"
+                    class="mt-1 w-full rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 outline-none focus:border-indigo-400/60">
+                    <option>Created</option>
+                    <option>Picked up</option>
+                    <option>In transit</option>
+                    <option>Arrived at facility</option>
+                    <option>Out for delivery</option>
+                    <option>Delivered</option>
+                    <option>Exception</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-xs text-slate-400">Location</label>
+                  <input id="evLocation" placeholder="Nairobi"
+                    class="mt-1 w-full rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 outline-none focus:border-indigo-400/60" />
+                </div>
+                <div>
+                  <label class="text-xs text-slate-400">Note (optional)</label>
+                  <input id="evNote" placeholder="Arrived at hub"
+                    class="mt-1 w-full rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 outline-none focus:border-indigo-400/60" />
+                </div>
+              </div>
+
+              <div class="mt-4 flex gap-3">
+                <button id="btnAddEvent" class="rounded-xl bg-indigo-500 px-4 py-3 font-semibold text-white hover:bg-indigo-400">
+                  Add event
+                </button>
+                <button id="btnResetEvent" type="button"
+                  class="rounded-xl border border-white/10 bg-white/5 px-4 py-3 hover:bg-white/10">
+                  Reset
+                </button>
+              </div>
+            </div>
+
+            <!-- Safety -->
+            <div class="rounded-2xl border border-white/10 bg-slate-950/20 p-5">
+              <div class="font-semibold">Safety</div>
+              <ul class="mt-2 list-disc pl-5 text-sm text-slate-300 space-y-1">
+                <li>Never store Africa’s Talking API key in these HTML/JS files.</li>
+                <li>All tracking lookups must go through the backend PIN verification function.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script type="module" src="./assets/admin.js"></script>
+</body>
+</html>
