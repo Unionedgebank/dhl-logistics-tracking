@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DHL Logistics | Track</title>
+
+  <!-- Tailwind via CDN (good for static GitHub Pages start) -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- [web:198] -->
+
+  <meta name="color-scheme" content="dark light" />
+</head>
+
+<body class="h-full bg-slate-950 text-slate-100">
+  <div class="min-h-full">
+    <header class="border-b border-white/10 bg-slate-950/60 backdrop-blur">
+      <div class="mx-auto max-w-5xl px-4 py-5 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500 to-cyan-400"></div>
+          <div>
+            <div class="text-lg font-semibold leading-tight">DHL Logistics</div>
+            <div class="text-xs text-slate-400">Shipment tracking</div>
+          </div>
+        </div>
+        <a href="./admin.html" class="text-sm text-slate-300 hover:text-white underline decoration-white/20">
+          Admin
+        </a>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-5xl px-4 py-10">
+      <div class="grid gap-6 lg:grid-cols-5">
+        <!-- Left -->
+        <section class="lg:col-span-2">
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-5 shadow-sm">
+            <h1 class="text-xl font-semibold">Track your shipment</h1>
+            <p class="mt-2 text-sm text-slate-300">
+              Enter your tracking number and 6-digit PIN from SMS.
+            </p>
+
+            <div class="mt-5 space-y-3">
+              <div>
+                <label class="text-xs text-slate-400">Tracking number</label>
+                <input id="trackingNumber" placeholder="DLH-2025-000123"
+                  class="mt-1 w-full rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 outline-none focus:border-indigo-400/60" />
+                <p class="mt-1 text-xs text-slate-400">Format: DLH-YYYY-000000</p>
+              </div>
+
+              <div>
+                <label class="text-xs text-slate-400">6-digit PIN</label>
+                <input id="pin" placeholder="123456" inputmode="numeric" maxlength="6"
+                  class="mt-1 w-full rounded-xl border border-white/10 bg-slate-950/40 px-4 py-3 outline-none focus:border-indigo-400/60" />
+              </div>
+
+              <div class="flex gap-3 pt-2">
+                <button id="btnTrack"
+                  class="flex-1 rounded-xl bg-indigo-500 px-4 py-3 font-semibold text-white hover:bg-indigo-400">
+                  Track
+                </button>
+                <button id="btnClear" type="button"
+                  class="rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-slate-100 hover:bg-white/10">
+                  Clear
+                </button>
+              </div>
+
+              <div id="msg" class="hidden rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-200"></div>
+
+              <div class="mt-4 rounded-xl border border-white/10 bg-slate-950/30 p-4">
+                <div class="text-xs text-slate-400">Privacy</div>
+                <div class="mt-1 text-sm text-slate-300">
+                  Only users with the tracking number and PIN can view shipment updates.
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right -->
+        <section class="lg:col-span-3">
+          <div class="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <div class="flex items-center justify-between gap-4">
+              <div>
+                <h2 class="text-lg font-semibold">Tracking details</h2>
+                <p class="text-sm text-slate-300">Latest status and full history.</p>
+              </div>
+              <span id="badgeStatus" class="hidden rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200"></span>
+            </div>
+
+            <div id="result" class="hidden">
+              <div class="mt-5 grid gap-3 sm:grid-cols-2">
+                <div class="rounded-xl border border-white/10 bg-slate-950/30 p-4">
+                  <div class="text-xs text-slate-400">Tracking</div>
+                  <div id="rTracking" class="mt-1 font-semibold"></div>
+                </div>
+                <div class="rounded-xl border border-white/10 bg-slate-950/30 p-4">
+                  <div class="text-xs text-slate-400">Last updated</div>
+                  <div id="rUpdated" class="mt-1"></div>
+                </div>
+              </div>
+
+              <div class="mt-5">
+                <div class="text-sm font-semibold">History</div>
+                <div id="events" class="mt-3 space-y-3"></div>
+              </div>
+            </div>
+
+            <div id="emptyState" class="mt-6 rounded-xl border border-dashed border-white/15 bg-slate-950/20 p-8 text-center text-slate-300">
+              Enter tracking + PIN to view updates.
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <footer class="mt-10 text-xs text-slate-500">
+        Powered by secure PIN verification via backend function.
+      </footer>
+    </main>
+  </div>
+
+  <script type="module" src="./assets/track.js"></script>
+</body>
+</html>
